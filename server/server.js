@@ -8,32 +8,19 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 //Parser application/json
 app.use(bodyParser.json());
- 
-app.get('/usuario', function (req, res) {
-  res.send('get usuario')
-})
 
-app.post('/usuario', function (req, res) {
-  let body = req.body;
-  if (body.nombre === undefined) {
-    res.status(400).json({
-      ok:false,
-      mensaje:'El nombre es necesario'
-    })   
-  } else {
-    res.json({persona:body})
+//Obtiene la rutas del usuario
+app.use(require('./routes/usuario'));
+
+const mongoose = require('mongoose');
+mongoose.connect(process.env.URL_DB,(err)=>{
+  if (err) {
+    throw err;
   }
-})
-
-app.put('/usuario/:id', function (req, res) {
-  let id = req.params.id;
-  res.json({id})
-})
- 
-app.delete('/usuario', function (req, res) {
-  res.send('delete usuario')
-})
+  console.log('Conectado a MongoBD', );
+});
 
 app.listen(process.env.PORT,()=>{
-    console.log('Escuchando..: ', process.env.PORT);
+  console.log('Escuchando..: ', process.env.PORT);
 })
+
