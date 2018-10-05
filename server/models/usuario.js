@@ -21,7 +21,7 @@ let usuarioShema = new Schema({
     password:{
         type:String,
         required:[true,'Contraseña requerida'],
-        select:false
+        //select:false
     },
     img:{type:String},
     role:{

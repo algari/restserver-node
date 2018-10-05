@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Parser application/json
 app.use(bodyParser.json());
 
-//Obtiene la rutas del usuario
-app.use(require('./routes/usuario'));
+//Obtiene la rutas globales
+app.use(require('./routes/index'));
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.URL_DB,(err)=>{

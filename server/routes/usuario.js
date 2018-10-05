@@ -5,7 +5,9 @@ const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
 
-app.get('/usuario', function (req, res) {
+const {verificaToken,verificaAdminRol} = require('../middelwares/authentication');
+
+app.get('/usuario', verificaToken, (req, res)=> {
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
@@ -33,7 +35,7 @@ app.get('/usuario', function (req, res) {
     });
 })
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificaToken,verificaAdminRol], (req, res)=> {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -58,11 +60,11 @@ app.post('/usuario', function (req, res) {
     });
 })
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', verificaToken, function (req, res) {
     let id = req.params.id;
-    let body = _.pic(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
+    let body = _.pick(req.body, ['nombre', "email", 'img', 'role', 'estado']);
 
-    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioBD) => {
+    Usuario.findByIdAndUpdate(id, body, {context: 'query' , new: true, runValidators: true }, (err, usuarioBD) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -76,7 +78,7 @@ app.put('/usuario/:id', function (req, res) {
     });
 })
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', verificaToken, function (req, res) {
     let id = req.params.id;
     let cambiaEstado = {
         estado:false
