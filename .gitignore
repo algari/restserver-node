@@ -5,3 +5,5 @@ tablas/*txt
 .idea/
 
 .vscode/
+
+uploads/*
